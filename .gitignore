@@ -1,0 +1,14 @@
+echo "# PHP/IDE files
+.env
+config/config.php  # If it has secrets; or move secrets to .env
+vendor/
+*.log
+.DS_Store
+Thumbs.db
+
+# Temp files
+*.tmp
+*.cache
+
+# Node modules (if using JS/CSS build tools)
+node_modules/" > .gitignore
