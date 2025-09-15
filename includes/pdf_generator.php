@@ -39,21 +39,34 @@ function generateSalaryPDF($employee_data) {
         'format' => 'A4',
         'orientation' => 'P', // Portrait
         'tempDir' => $tempDir, // Custom writable temp directory
-        'fontDir' => [__DIR__ . '/../fonts'], // Optional: Custom font directory
+        'fontDir' => [__DIR__ . '/../tmp/mpdf/Noto_Sans_Khmer'], // Custom font directory
         'fontdata' => [
-            'khmer' => [
-                'R' => 'khmerosmoul', // Built-in mPDF Khmer font
+            'notokhmer' => [
+                'R' => 'NotoSansKhmer-Regular.ttf', // Ensure this file exists in /fonts
+                'B' => 'NotoSansKhmer-Bold.ttf',    // Ensure this file exists in /fonts
                 'useOTL' => 0xFF, // Enable OpenType Layout for Khmer
                 'useKashida' => 75,
             ],
-            'notokhmer' => [
-                'R' => 'NotoSansKhmer-Regular.ttf', // Place in /fonts if using
-                'B' => 'NotoSansKhmer-Bold.ttf',
-                'useOTL' => 0xFF,
-                'useKashida' => 75,
+        ],
+        'pdf' => [
+            'default_font' => 'KhmerOS', // Set your default font here
+
+            // Path to the font files in your public directory
+            'font_path' => public_path('fonts/'),
+
+            'font_data' => [
+                'battambang' => [ // lowercase letters only in font key
+                    'R' => 'KhmerOS.ttf',
+                    'B' => 'KhmerOS-Bold.ttf',
+                    'useOTL' => 0xFF,
+                ],
+                'khmermuol' => [ // lowercase letters only in font key
+                    'R' => 'KhmerOSmuol.ttf',
+                    'useOTL' => 0xFF,
+                ],
             ],
         ],
-        'default_font' => 'khmer', // Use built-in Khmer font
+        'default_font' => 'notokhmer', // Use Noto Sans Khmer as default
         'default_font_size' => 10,
         'margin_left' => 15,
         'margin_right' => 15,
@@ -71,7 +84,7 @@ function generateSalaryPDF($employee_data) {
         $css = '
         @import url(https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@300;400;500;600;700&display=swap);
         @import url(https://fonts.googleapis.com/css2?family=Khmer&display=swap);
-        body { font-family: "khmer", "Noto Sans Khmer", sans-serif; font-size: 10pt; color: #000; }
+        body { font-family: "notokhmer", "Noto Sans Khmer", sans-serif; font-size: 10pt; color: #000; }
         .container { max-width: 800px; margin: 0 auto; padding: 10px; }
         .card { border: 1px solid #000; padding: 10px; }
         .header1 { text-align: center; font-size: 14pt; font-weight: bold; margin-bottom: 10px; }

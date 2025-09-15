@@ -1,68 +1,236 @@
+
+
+/* Base styles for responsiveness */
 body {
-    background-color: #f8f9fa;
-    font-family: 'Noto Sans Khmer', 'Khmer OS', sans-serif;
-    font-weight: 400;
+    font-family: 'Noto Sans Khmer', 'Khmer', sans-serif;
+    font-size: clamp(14px, 2.5vw, 16px); /* Scales between 14px and 16px based on viewport width */
+    line-height: 1.6;
 }
-.header {
-    background-color: #198754; /* Green like in sample */
-    color: white;
-    padding: 15px;
-    text-align: center;
-    border-radius: 8px 8px 0 0;
+
+.container {
+    max-width: 100%;
+    padding: 0 15px;
 }
-.header1 {
-    color: #555;
-    padding: 15px;
-    text-align: center;
-    border-radius: 8px 8px 0 0;
-}
-.header h4 {
-    font-family: 'Noto Sans Khmer', sans-serif;
-    font-weight: 600;
-}
-.employee-info {
-    background-color: #e9ecef;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 8px !important;
-}
-.row{
-    margin-right: 0!important;
-    margin-left:  0!important;
-}
-.employee-info strong {
-    font-family: 'Noto Sans Khmer', sans-serif;
-    font-weight: 600;
-}
-.employee-info, .employee-info * {
-    font-family: 'Noto Sans Khmer', sans-serif;
-}
-.ot-table th {
-    background-color: #198754;
-    color: white;
-}
-.ot-table th, .ot-table td {
-    font-family: 'Noto Sans Khmer', sans-serif;
-}
-.ot-table td {
-    vertical-align: middle;
-}
-.section-divider {
-    margin-top: 30px;
-}
-/* Make it more modern */
+
 .card {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border: 1px solid #000;
+    border-radius: 0.25rem;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    padding: 0.75rem;
+}
+
+.employee-info div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.table td {
+    padding: 0.5rem;
+    vertical-align: middle;
+    word-break: break-word; /* Ensures text wraps on small screens */
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+.disable {
     border: none;
 }
-/* Ensure Khmer text direction and alignment */
-body {
-    direction: ltr;
-    text-align: left;
+
+.fon {
+    font-weight: bold;
 }
-/* For mobile responsiveness */
+
+.header h4 {
+    margin: 0;
+    font-size: clamp(1rem, 2.5vw, 1.25rem); /* Scales header size */
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-    .employee-info .col-md-4 {
-        margin-bottom: 10px;
+    .employee-info .col-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .table td {
+        padding: 0.25rem;
+        font-size: clamp(12px, 2vw, 14px); /* Smaller text on tablets */
+    }
+
+    .header h4 {
+        font-size: clamp(0.875rem, 2vw, 1rem);
+    }
+
+    .mt-3.text-end {
+        text-align: center !important;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .table td {
+        font-size: clamp(10px, 2vw, 12px); /* Even smaller text on mobile */
+    }
+
+    .header h4 {
+        font-size: clamp(0.75rem, 2vw, 0.875rem);
+    }
+
+    .employee-info div {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Base styles for responsiveness */
+body {
+    font-family: 'Noto Sans Khmer', 'Khmer', sans-serif;
+    font-size: clamp(14px, 2.5vw, 16px); /* Scales between 14px and 16px based on viewport width */
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 100%;
+    padding: 0 15px;
+}
+
+.card {
+    border: 1px solid #000;
+    border-radius: 0.25rem;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    padding: 0.75rem;
+}
+
+.employee-info div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.table td {
+    padding: 0.5rem;
+    vertical-align: middle;
+    word-break: break-word; /* Ensures text wraps on small screens */
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+.disable {
+    border: none;
+}
+
+.fon {
+    font-weight: bold;
+}
+
+.header h4 {
+    margin: 0;
+    font-size: clamp(1rem, 2.5vw, 1.25rem); /* Scales header size */
+}
+
+/* Vertical Line Container */
+.vertical-line-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.vertical-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background-color: #000; /* Black line */
+    transform: translateX(-50%);
+}
+
+.upper-content,
+.lower-content {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.upper-content {
+    padding-bottom: 1rem;
+}
+
+.lower-content {
+    padding-top: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .employee-info .col-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .table td {
+        padding: 0.25rem;
+        font-size: clamp(12px, 2vw, 14px); /* Smaller text on tablets */
+    }
+
+    .header h4 {
+        font-size: clamp(0.875rem, 2vw, 1rem);
+    }
+
+    .mt-3.text-end {
+        text-align: center !important;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .vertical-line {
+        display: none; /* Hide vertical line on tablets for simplicity */
+    }
+}
+
+@media (max-width: 576px) {
+    .table td {
+        font-size: clamp(10px, 2vw, 12px); /* Even smaller text on mobile */
+    }
+
+    .header h4 {
+        font-size: clamp(0.75rem, 2vw, 0.875rem);
+    }
+
+    .employee-info div {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .vertical-line {
+        display: none; /* Hide vertical line on mobile */
     }
 }
