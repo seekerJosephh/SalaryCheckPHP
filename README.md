@@ -1,5 +1,9 @@
 # SalaryCheckPHP
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b4a604745467195b4a97af6163b2279bcbd784ba
 Scope
 
 The project's scope covers a minimal viable product (MVP) for salary slip generation and viewing, focused on core functionality without advanced features like user authentication or multi-user dashboards. It includes:
@@ -39,4 +43,8 @@ Multi-Format Export: Facilitate easy downloading of salary slips as PDFs (using 
 Localization and Accessibility: Support Khmer (Cambodian) language for employee names, salary dates, and labels, ensuring cultural and linguistic relevance for a target audience in Cambodia or Khmer-speaking regions.
 Efficiency and Scalability: Optimize URL length for easy sharing (via compression, short variable names, and database shorteners) while maintaining data integrity for up to 30 salary variables (e.g., basic salary, OT hours, allowances, absences, totals).
 Development Simplicity: Leverage PHP tools like Composer (for mPDF), encryption libraries, and optional MySQL for backend storage, making it easy to deploy on local servers (e.g., XAMPP) or production environments.
+<<<<<<< HEAD
 Overall, the project aims to streamline HR/salary communication in a secure, mobile-friendly way, reducing the need for email attachments or physical documents.
+=======
+Overall, the project aims to streamline HR/salary communication in a secure, mobile-friendly way, reducing the need for email attachments or physical documents.
+>>>>>>> b4a604745467195b4a97af6163b2279bcbd784ba
