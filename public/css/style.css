@@ -1,4 +1,71 @@
-
+body {
+    background-color: #f8f9fa;
+    font-family: 'Noto Sans Khmer', 'Khmer OS', sans-serif;
+    font-weight: 400;
+}
+.header {
+    background-color: #198754; /* Green like in sample */
+    color: white;
+    padding: 15px;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+}
+.header1 {
+    color: #555;
+    padding: 15px;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+}
+.header h4 {
+    font-family: 'Noto Sans Khmer', sans-serif;
+    font-weight: 600;
+}
+.employee-info {
+    background-color: #e9ecef;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 8px !important;
+}
+.row{
+    margin-right: 0!important;
+    margin-left:  0!important;
+}
+.employee-info strong {
+    font-family: 'Noto Sans Khmer', sans-serif;
+    font-weight: 600;
+}
+.employee-info, .employee-info * {
+    font-family: 'Noto Sans Khmer', sans-serif;
+}
+.ot-table th {
+    background-color: #198754;
+    color: white;
+}
+.ot-table th, .ot-table td {
+    font-family: 'Noto Sans Khmer', sans-serif;
+}
+.ot-table td {
+    vertical-align: middle;
+}
+.section-divider {
+    margin-top: 30px;
+}
+/* Make it more modern */
+.card {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border: none;
+}
+/* Ensure Khmer text direction and alignment */
+body {
+    direction: ltr;
+    text-align: left;
+}
+/* For mobile responsiveness */
+@media (max-width: 768px) {
+    .employee-info .col-md-4 {
+        margin-bottom: 10px;
+    }
+}
 
 /* Base styles for responsiveness */
 body {

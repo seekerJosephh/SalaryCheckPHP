@@ -1,15 +1,15 @@
 <?php
 require_once __DIR__ . '/../includes/encryption.php';
 require_once __DIR__ . '/../config/config.php';
-$config = require __DIR__ . '/../config/config.php'; // Load config
+$config = require __DIR__ . '/../config/config.php';
 $secret_key = $config['encryption_key'];
 $method = 'aes-256-cbc';
 
-// Shortened variable names for test data (unique keys)
+// Test data with valid keys
 $test_data = [
     'e' => '12345',           // Emp_ID
-    'k' => 'Chetra Pang',         // KhmerName
-    's' => 'ខែ មករា ២០២៥',   // SalaryDTKH
+    'k' => 'Joseph',     // KhmerName
+    's' => 'ខែ មករា ២០២៥', // SalaryDTKH
     'b' => 1000,              // Basic
     'tn' => 10,               // Total_Normal_OT
     'na' => 50,               // Normal_Amount
@@ -23,14 +23,14 @@ $test_data = [
     'ag' => 15,               // Alw_GSTARS
     'al' => 25,               // Alw_License
     'ap' => 30,               // Alw_Position
-    'a1' => 10,               // Alw_Additional (was 'ad', changed to avoid conflict)
+    'a1' => 10,               // Alw_Additional
     'sn' => 20,               // Seniority
     'sa' => 15,               // SaleAL
     'aj' => 5,                // Adjust
     't1' => 10068,            // Total_1
-    'a2' => 1,                // Abs_(Day) (was 'ad', changed to avoid conflict)
-    'a3' => 8,                // Abs_(Hour) (was 'ah', changed to avoid conflict)
-    'au' => 4,                // Abs_(Unpaid)
+    'a2' => 1,                // Abs_Day
+    'a3' => 8,                // Abs_Hour
+    'au' => 4,                // Abs_Unpaid
     'am' => 20,               // Abs_Amount
     'ak' => 100,              // Alw_KHNY
     'av' => 200,              // Advance
@@ -46,8 +46,8 @@ $compressed = gzcompress($json);
 // Encrypt the compressed data
 $enc = encryptData($compressed, $secret_key, $method);
 
-// Use a shorter base URL (configure in web server)
-$base_url = 'localhost/SalaryCheck/public/index.php'; // Alias for http://example.com/SalaryCheck/public/index.php
+// Use a shorter base URL
+$base_url = 'localhost/SalaryCheck/public/index.php';
 $url = $base_url . '?enc=' . urlencode($enc);
 
 echo $url . "\n";

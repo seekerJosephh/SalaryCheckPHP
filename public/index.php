@@ -1,17 +1,13 @@
 <?php
 // public/index.php
 require_once __DIR__ . '/../vendor/autoload.php';
-
-// Include the encryption functions
 require_once __DIR__ . '/../includes/encryption.php';
-
-// Load configuration (e.g., secret key)
 require_once __DIR__ . '/../config/config.php';
 
-$secret_key = $config['encryption_key'] ?? 'your_secret_key_32_chars_long'; // 32 bytes for AES-256
+$secret_key = $config['encryption_key'] ?? 'your_secret_key_32_chars_long';
 $method = 'aes-256-cbc';
 
-// Initialize employee_data with long variable names
+// Initialize employee_data with valid keys
 $employee_data = [
     'Emp_ID' => '',
     'KhmerName' => '',
@@ -34,9 +30,9 @@ $employee_data = [
     'SaleAL' => 0,
     'Adjust' => 0,
     'Total_1' => 0,
-    'Abs_(Day)' => 0,
-    'Abs_(Hour)' => 0,
-    'Abs_(Unpaid)' => 0,
+    'Abs_Day' => 0,        // Updated key
+    'Abs_Hour' => 0,       // Updated key
+    'Abs_Unpaid' => 0,     // Updated key
     'Abs_Amount' => 0,
     'Alw_KHNY' => 0,
     'Advance' => 0,
@@ -45,7 +41,7 @@ $employee_data = [
     'Total_2' => 0
 ];
 
-// Mapping of short keys (from URL) to long keys (for display/PDF)
+// Updated key mapping to match generate.php
 $key_mapping = [
     'e' => 'Emp_ID',
     'k' => 'KhmerName',
@@ -63,14 +59,14 @@ $key_mapping = [
     'ag' => 'Alw_GSTARS',
     'al' => 'Alw_License',
     'ap' => 'Alw_Position',
-    'ad' => 'Alw_Additional',
+    'a1' => 'Alw_Additional',
     'sn' => 'Seniority',
     'sa' => 'SaleAL',
     'aj' => 'Adjust',
     't1' => 'Total_1',
-    'ad' => 'Abs_(Day)', // Note: 'ad' is reused; handled dynamically below
-    'ah' => 'Abs_(Hour)', // Note: 'ah' is reused; handled dynamically below
-    'au' => 'Abs_(Unpaid)',
+    'a2' => 'Abs_Day',      // Updated key
+    'a3' => 'Abs_Hour',     // Updated key
+    'au' => 'Abs_Unpaid',   // Updated key
     'am' => 'Abs_Amount',
     'ak' => 'Alw_KHNY',
     'av' => 'Advance',
@@ -105,14 +101,14 @@ if ($enc) {
         // Map short keys to long keys
         foreach ($key_mapping as $short => $long) {
             if (isset($data[$short])) {
-                // Handle reused keys ('ad' and 'ah')
-                if ($short === 'ad' && $long === 'Abs_(Day)') {
-                    $employee_data['Abs_(Day)'] = $data['ad'];
-                } elseif ($short === 'ah' && $long === 'Abs_(Hour)') {
-                    $employee_data['Abs_(Hour)'] = $data['ah'];
-                } else {
-                    $employee_data[$long] = $data[$short];
-                }
+                $employee_data[$long] = $data[$short];
+            }
+        }
+
+        // Validate all required keys are present
+        foreach ($employee_data as $key => $value) {
+            if ($value === '' || $value === 0) {
+                throw new Exception("Missing or invalid data for key: $key");
             }
         }
     } catch (Exception $e) {
@@ -120,7 +116,7 @@ if ($enc) {
         exit;
     }
 } else {
-    // Use mock data if no enc parameter is provided
+    // Use mock data only if no enc parameter is provided
     $employee_data = [
         'Emp_ID' => '12345',
         'KhmerName' => 'សុខ ស៊ីណា',
@@ -143,9 +139,9 @@ if ($enc) {
         'SaleAL' => 15,
         'Adjust' => 5,
         'Total_1' => 568,
-        'Abs_(Day)' => 1,
-        'Abs_(Hour)' => 8,
-        'Abs_(Unpaid)' => 4,
+        'Abs_Day' => 1,      // Updated key
+        'Abs_Hour' => 8,     // Updated key
+        'Abs_Unpaid' => 4,   // Updated key
         'Abs_Amount' => 20,
         'Alw_KHNY' => 100,
         'Advance' => 200,
@@ -156,44 +152,12 @@ if ($enc) {
 }
 
 if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
-    // Reprocess the URL data for PDF if enc is present
-    if (isset($_GET['enc'])) {
-        try {
-            $compressed = decryptData($_GET['enc'], $secret_key, $method);
-            if ($compressed === false) {
-                throw new Exception('Decryption failed');
-            }
-            $json = gzuncompress($compressed);
-            if ($json === false) {
-                throw new Exception('Decompression failed');
-            }
-            $data = json_decode($json, true);
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new Exception('JSON decode failed: ' . json_last_error_msg());
-            }
-            // Update $employee_data with decrypted data
-            foreach ($key_mapping as $short => $long) {
-                if (isset($data[$short])) {
-                    if ($short === 'ad' && $long === 'Abs_(Day)') {
-                        $employee_data['Abs_(Day)'] = $data['ad'];
-                    } elseif ($short === 'ah' && $long === 'Abs_(Hour)') {
-                        $employee_data['Abs_(Hour)'] = $data['ah'];
-                    } else {
-                        $employee_data[$long] = $data[$short];
-                    }
-                }
-            }
-        } catch (Exception $e) {
-            echo "<div class='alert alert-danger'>Error: " . htmlspecialchars($e->getMessage()) . "</div>";
-            exit;
-        }
-    }
+    // Use the already populated $employee_data
     require_once __DIR__ . '/../includes/pdf_generator.php';
     generateSalaryPDF($employee_data);
     exit;
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="km">
@@ -201,16 +165,10 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Salary Check</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <!-- Google Fonts: Noto Sans Khmer for Khmer script -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Khmer&display=swap" rel="stylesheet">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="./css/style.css">
-    <!-- html2canvas for image download -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
@@ -221,7 +179,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
             </div>
             <div class="card-body">
                 <div class="vertical-line-container">
-                    <!-- Upper Content (Employee Info and Basic Salary) -->
                     <div class="upper-content">
                         <div class="employee-info row gy-2 mb-4">
                             <div class="col-12 col-md-4">
@@ -238,11 +195,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
                             <h4 class="mb-0">ប្រាក់ខែគោល ៖ <?php echo number_format($employee_data['Basic']); ?> $</h4>
                         </div>
                     </div>
-
-                    <!-- Vertical Line -->
                     <div class="vertical-line"></div>
-
-                    <!-- Lower Content (OT and Absence/Deduction Tables) -->
                     <div class="lower-content">
                         <div class="table-responsive">
                             <table class="table table-striped ot-table">
@@ -378,7 +331,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
                                     </tr>
                                     <tr>
                                         <td></td>
-                                        <td>មាន&nbsp;ច្បាប់៖&nbsp;<?php echo number_format($employee_data['Abs_(Day)']); ?>&nbsp;ថ្ងៃ&nbsp;<?php echo number_format($employee_data['Abs_(Hour)']); ?>&nbsp;ម៉ោង</td>
+                                        <td>មាន&nbsp;ច្បាប់៖&nbsp;<?php echo number_format($employee_data['Abs_Day']); ?>&nbsp;ថ្ងៃ&nbsp;<?php echo number_format($employee_data['Abs_Hour']); ?>&nbsp;ម៉ោង</td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -386,7 +339,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
                                     </tr>
                                     <tr>
                                         <td></td>
-                                        <td>គ្មានច្បាប់៖&nbsp;<?php echo number_format($employee_data['Abs_(Unpaid)']); ?>&nbsp;ម៉ោង</td>
+                                        <td>គ្មានច្បាប់៖&nbsp;<?php echo number_format($employee_data['Abs_Unpaid']); ?>&nbsp;ម៉ោង</td>
                                         <td></td>
                                         <td></td>
                                         <td><span class="fon">ចំនួនទឹកប្រាក់៖</span></td>
@@ -434,21 +387,18 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_pdf') {
                 </div>
             </div>
         </div>
-        <!-- Download Buttons -->
         <div class="mt-3 text-end">
-            <a href="?action=download_pdf&key=<?php echo htmlspecialchars($short_key ?? ''); ?>" class="btn btn-success me-2">ទាញយកជា PDF</a>
+            <a href="?action=download_pdf&enc=<?php echo urlencode($enc); ?>" class="btn btn-success me-2">ទាញយកជា PDF</a>
             <button onclick="downloadImage()" class="btn btn-success">ទាញយកជារូបភាព</button>
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <!-- JavaScript for Image Download -->
     <script>
         function downloadImage() {
             html2canvas(document.getElementById('salaryCard'), {
-                scale: 2, // Improve image quality
-                useCORS: true // Handle cross-origin issues if any
+                scale: 2,
+                useCORS: true
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'salary_slip.png';
